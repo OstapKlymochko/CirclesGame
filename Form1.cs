@@ -1,6 +1,6 @@
 using System.Drawing.Drawing2D;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
-using setTimer = System.Timers.Timer;
+using Timer = System.Timers.Timer;
 
 namespace game
 {
@@ -9,13 +9,7 @@ namespace game
 		private Random rnd = new Random();
 		private int points = 0;
 		private int record = 0;
-		private Graphics graphics;
-		private int delay = 2400;
-		private static Dictionary<Color, int> lifeTimes = new Dictionary<Color, int>()
-		{
-
-		};
-		private Action<Circle> removeCircle;
+		private int delay;
 		public int Points
 		{
 			get
@@ -61,8 +55,7 @@ namespace game
 			this.BackColor = Color.Gray;
 			PointsCounter.Text = "Бали: " + points;
 			RecordLabel.Text = "Рекорд: " + record.ToString();
-			graphics = PlayGround.CreateGraphics();
-			removeCircle = (c) => this.PlayGround.Controls.Remove((Circle)c);
+			delay = 3 * this.GameTimer.Interval; 
 		}
 		private async void drawCircle()
 		{
@@ -76,34 +69,19 @@ namespace game
 			circle.Location = new Point(x, y);
 			circle.Click += Circle_Click;
 			PlayGround.Controls.Add(circle);
-
-			await Task.Delay(delay);
-			await Task.Run(() =>
+			Timer asd = new Timer(delay);
+			asd.Elapsed += (sender, e) => remove(sender, circle);
+			asd.Start();
+		}
+		private void remove(object sender, Circle c)
+		{
+			(sender as Timer).Dispose();
+			if (PlayGround.Controls.Contains(c))
 			{
-				if (PlayGround.Controls.Contains(circle))
-				{
-					this.Points = circle.BackColor != Color.Green ? this.Points - Circle.points[circle.BackColor] : this.Points;
-					removeCircle(circle);
-				}
-			});
+				Points = c.BackColor == Color.Green ? Points : Points - Circle.points[c.BackColor];
+				PlayGround.Controls.Remove(c);
+			}
 		}
-
-
-		private void Form1_Load(object sender, EventArgs e)
-		{
-		}
-
-		private void PointsCounter_Click(object sender, EventArgs e)
-		{
-
-		}
-
-		private void PlayGround_Paint(object sender, PaintEventArgs e)
-		{
-
-		}
-
-
 		private void GameTimer_Tick(object sender, EventArgs e)
 		{
 			drawCircle();

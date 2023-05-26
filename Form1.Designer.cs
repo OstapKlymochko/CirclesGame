@@ -46,7 +46,6 @@
 			PointsCounter.Size = new Size(72, 30);
 			PointsCounter.TabIndex = 0;
 			PointsCounter.Text = "label1";
-			PointsCounter.Click += PointsCounter_Click;
 			// 
 			// PlayGround
 			// 
@@ -55,7 +54,6 @@
 			PlayGround.Name = "PlayGround";
 			PlayGround.Size = new Size(831, 539);
 			PlayGround.TabIndex = 2;
-			PlayGround.Paint += PlayGround_Paint;
 			// 
 			// StartGame
 			// 
@@ -105,7 +103,6 @@
 			Controls.Add(PointsCounter);
 			Name = "Form1";
 			Text = "Гра в кульки";
-			Load += Form1_Load;
 			ResumeLayout(false);
 			PerformLayout();
 		}
