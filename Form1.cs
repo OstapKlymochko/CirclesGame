@@ -1,6 +1,8 @@
 using System.Drawing.Drawing2D;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
-using Timer = System.Timers.Timer;
+//using Timer = System.Timers.Timer;
+using Timer = System.Windows.Forms.Timer;
+
 
 namespace game
 {
@@ -55,8 +57,7 @@ namespace game
 			this.BackColor = Color.Gray;
 			PointsCounter.Text = "Бали: " + points;
 			RecordLabel.Text = "Рекорд: " + record.ToString();
-			delay = 3 * this.GameTimer.Interval; 
-		}
+			delay = 3 * this.GameTimer.Interval;}
 		private async void drawCircle()
 		{
 			int d = rnd.Next(20, 50);
@@ -69,8 +70,9 @@ namespace game
 			circle.Location = new Point(x, y);
 			circle.Click += Circle_Click;
 			PlayGround.Controls.Add(circle);
-			Timer asd = new Timer(delay);
-			asd.Elapsed += (sender, e) => remove(sender, circle);
+			Timer asd = new Timer();
+			asd.Interval = delay;
+			asd.Tick += (sender, e) => remove(sender, circle);
 			asd.Start();
 		}
 		private void remove(object sender, Circle c)
@@ -110,7 +112,7 @@ namespace game
 			Circle item = sender as Circle;
 			GameTimer.Interval = GameTimer.Interval <= 200 ? 200 : GameTimer.Interval - 20;
 			this.Points += Circle.points[item.BackColor];
-			this.Record += Circle.points[item.BackColor];
+			this.Record = item.BackColor == Color.Green ? Record: Record + Circle.points[item.BackColor];
 			this.PlayGround.Controls.Remove(item);
 		}
 	}
